@@ -1,4 +1,4 @@
-onst bcrypt = require('bcrypt');
+const bcrypt = require('bcrypt');
 
 const password = 'Octubre14.'; // Cambia esto por la contraseña que deseas hashear
 const saltRounds = 10;
