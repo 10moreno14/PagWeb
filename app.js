@@ -12,8 +12,17 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cookieSession({
     name: 'session',
-    keys: ['tu_clave_secreta']
+    keys: ['tu_clave_secreta'],
+    secure: false // Cambia a true si usas HTTPS
 }));
+
+// Middleware para proteger rutas
+const verificarSesion = (req, res, next) => {
+    if (!req.session.user) {
+        return res.redirect('/');  // Redirige a la página principal si no está autenticado
+    }
+    next();
+};
 
 // Servir archivos estáticos
 app.use(express.static(path.join(__dirname, 'public')));
@@ -28,7 +37,7 @@ const db = mysql.createConnection({
 
 // Rutas
 app.use('/api', require('./routes/api'));
-app.use('/inicio', require('./routes/inicio'));
+app.use('/inicio', verificarSesion, require('./routes/inicio'));  // Asegúrate de que esta ruta exista
 
 // Iniciar el servidor
 app.listen(PORT, () => {
